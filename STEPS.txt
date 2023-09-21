@@ -1,0 +1,123 @@
+//do the query to controller
+laravel new proyecto 
+cd proyecto --> code .
+php artisan serve
+
+
+<!-------------------------
+APP : Aqui vivira todo nuestro codigo principal.
+Bootstrap: Utilizada por laravel para mejorar el rendimiento
+config: Cada paquete que se instale. Se genera un archivo que se puede editar y modificar.
+Database : Carpeta principal de las bases de datos
+a. migrations : Archivos con la estructura principal para desarrollar tablas.
+b. factories: nos permite desarrollar datos falsos para probar aplicacion
+c. seeders: encargada de ejecutar los factories que desarrollemos
+lang: idioma
+public: punto de acceso a web.
+resources: archivos originales css,javascript y vistas
+routes: configuramos rutas del trabaja principalmente en web.php
+storage: elementos generados por laravel. cache o si usuario guarda muchos archivos se pueden guardar hay.
+11 test: Pruebas
+vendor: Nose toca esta carpeta. Hay se ve todo lo que se instala con composer.
+
+
+-----------routes\web.php
+
+        <?php
+        use Illuminate\Http\Request;  //import module to http Request
+        use Illuminate\Support\Facades\Route;
+
+        /**
+        * Route::get Consultar
+        * Route::post guardar
+        * Route::delete
+        * Route::put actualizar 
+        */
+
+        Route::get('/', function () {
+            return 'Ruta Home';
+        });
+
+        Route::get('blog', function () {
+            return 'Listado de publicasiones';
+        });
+
+        Route::get('blog/{slug}', function ($slug) {
+            //consulta a base de datos
+            return $slug;
+        });
+    
+
+<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+resources\views\home.blade.php //we´ll create it
+resources\views\blog.blade.php  //we created endpoint blog
+        <body>
+        <h1>Listado/h1>
+
+        @foreach ($posts as $post)
+            <p>
+                <strong>{{ $post['id']}}</strong>    
+                <a href="">
+                    {{ $post['title']}}
+                </a>
+            </p>        
+        @endforeach
+        </body>
+
+-------------------
+<<<<<<<<<<<<<resources\views\template.blade.php //create a template
+
+routes\web.php
+        Route::controller(PageController::class)->group(function(){
+        Route::get('/', 'home')->name('home');
+        Route::get('blog', 'blog')->name('blog');
+        Route::get('blog/{slug}', 'post')->name('post');
+
+------- php artisan make:migration create_posts_table  
+        //So the name should be -> create_NOMBRETABLA_table 
+
+        php artisan migrate
+php artisan make:model --help
+php artisan make:model Post -fc  //factories and controller
+
+<!---------Http\Controllers\PageController.php
+        <?php
+
+        namespace App\Http\Controllers;
+
+        use App\Models\Post;
+        use Illuminate\Http\Request;
+
+        class PageController extends Controller
+        {
+            public function home()
+            {
+                return view('home');
+            }
+            public function blog()
+            {
+                //consulta a base de datos
+                //$posts = Post::get();
+                //$post = Post::first();
+                //$post = Post::find(25);
+                //dd($post);
+
+                $posts = Post::latest()->paginate;
+                return view('blog', ['posts' => $posts]);
+
+            }
+            public function post(Post $post)
+            {   //consulta a base de datos
+                return view('post', ['post' => $post]);
+            } 
+        }
+****************************
+---------app\Models\Post.php    //we have to add the relatiship to use in view -->blog.blade.php
+---------resources\views\blog.blade.php
+                public function user(){
+                return $this->belongsTo(User::class);
+                }
+++++++++//composer require laravel/breeze --dev
+
+
+composer require barryvdh/laravel-debugbar --dev    //to able a disable .env :)
